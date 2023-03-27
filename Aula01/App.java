@@ -3,20 +3,26 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
+import java.util.Map;
 
 public class App {
     public static void main(String[] args) throws IOException, InterruptedException {
         String urlMain = "https://pokeapi.co/api/v2/pokemon/?offset=0&limit=493";
 
-        URI uri = URI.create(urlMain);
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder(uri).GET().build();
+        SenderRequests sr = new SenderRequests();
 
-        HttpResponse<String> res = client.send(request, HttpResponse.BodyHandlers.ofString());
+        JSONParser parser = new JSONParser();
 
-        String body = res.body();
+        List<Map<String, String>> l = parser.parse( sr.getRequest(urlMain) );
 
-        System.out.println(body);
+        for (Map<String, String> pokemon: l) {
+
+            System.out.println( pokemon.get("name") );
+        }
+
 
     }
+
+
 }
